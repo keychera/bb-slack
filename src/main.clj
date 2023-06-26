@@ -3,6 +3,9 @@
             slack))
 
 (defn -main [& args]
-  (let [opts (cli/parse-opts args)]
+  (let [{:as opts
+         :slack/keys [text token channel-id]} (cli/parse-opts args)]
     (println opts)
-    (slack/chat (or (:text opts) "hello from bb-slack!"))))
+    (slack/chat #:slack{:token token
+                        :channel-id channel-id
+                        :text (or text "hello from bb-slack!")})))
