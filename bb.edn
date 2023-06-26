@@ -1,1 +1,1 @@
-{:paths ["src"]}
+{:deps {io.github.keychera/bb-slack {:local/root "."}}}
