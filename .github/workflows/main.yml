@@ -3,6 +3,7 @@ on:
   workflow_dispatch:
 jobs: 
   build-uber-jar: 
+    permissions: write-all
     runs-on: ubuntu-latest
     steps:
       - name: Setup Babashka
