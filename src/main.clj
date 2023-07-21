@@ -2,6 +2,7 @@
   (:require [babashka.cli :as cli]
             slack))
 
+;; send to slack!
 (defn -main [& args]
   (let [{:as opts
          :keys [help]
