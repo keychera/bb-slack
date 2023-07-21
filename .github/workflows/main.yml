@@ -9,18 +9,17 @@ jobs:
       - name: Setup Babashka
         uses: turtlequeue/setup-babashka@v1.5.0
         with:
-          babashka-version: 0.8.156
+          babashka-version: 1.3.182
       - uses: actions/checkout@v3
       - name: Hello bb-slack!
         run: bb -m main --help
       - name: Create Uber-jar
-        run: bb uberjar slack.jar
+        run: bb uberjar slack.jar -m main
       - name: Release Jar
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "latest"
-          prerelease: true
           title: "Jar Release"
           files: |
             slack.jar
