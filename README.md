@@ -40,6 +40,17 @@ bb -m main --slack/template test/block.json
 
 # with template and context-edn
 bb -m main --slack/template test/block.json --slack/context-edn test/context.edn
+
+# with template and context-str
+bb -m main --slack/template test/block.json --slack/context-str '{:title "This is from commandline" :from "someone"}'
+```
+
+
+### release
+
+```sh
+bb uberjar slack.jar -m main
+bb slack.jar --slack/text "hello slack from commandline babashka"
 ```
 
 note:

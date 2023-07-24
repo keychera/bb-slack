@@ -3,8 +3,7 @@
             [cheshire.core :as json]
             [clojure.pprint :refer [pprint]]
             [clojure.string :as str]
-            [selmer.parser :refer [render]]
-            [util :refer [read-edn]]))
+            [selmer.parser :refer [render]]))
 
 ;; token from https://api.slack.com/authentication/oauth-v2
 (def env-slack-token (System/getenv "SLACK_TOKEN"))
@@ -26,13 +25,12 @@
   (println "sending text: " text)
   (chat-postMessage! token channel-id {:text text}))
 
-(defn template-chat! [token channel-id template context-edn]
-  (let [template-str (slurp template)
-        context (read-edn context-edn)
-        chat-to-send (render template-str context)]
-    (println "sending template from" template)
-    (if context-edn
-      (println "with context data: " context)
-      (println "without context data"))
-    (chat-postMessage! token channel-id {:blocks (-> (json/parse-string chat-to-send)
-                                                     (get "blocks"))})))
+(defn template-chat!
+  ([token channel-id template]
+   (template-chat! token channel-id template {}))
+  ([token channel-id template context]
+   (let [template-str (slurp template)
+         chat-to-send (render template-str context)]
+     (println "sending template from" template)
+     (println "with context data: " context)
+     (chat-postMessage! token channel-id {:blocks (-> (json/parse-string chat-to-send) (get "blocks"))}))))
