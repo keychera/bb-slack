@@ -1,0 +1,3 @@
+{:title "A parameterized title"
+ :from "chera"
+ :message "this chat is built with <https://app.slack.com/block-kit-builder | Block Kit Builder>"}

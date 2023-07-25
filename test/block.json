@@ -1,0 +1,25 @@
+{
+	"blocks": [
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "*{{title}}*"
+			}
+		},
+		{
+			"type": "section",
+			"fields": [
+				{
+					"type": "plain_text",
+					"text": "from: {{from}}",
+					"emoji": true
+				},
+				{
+					"type": "mrkdwn",
+					"text": "message: *{{message|safe}}*"
+				}
+			]
+		}
+	]
+}
