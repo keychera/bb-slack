@@ -11,26 +11,29 @@
 
 (defn slack-api [& endpoints] (str/join "/" (cons "https://slack.com/api" endpoints)))
 
-(defn chat-postMessage! [token channel-id body]
+(defn chat-postMessage! [{:keys [token channel-id thread-ts reply-broadcast] :as _opts} body]
   (println "to" (slack-api "chat.postMessage"))
   (let [req {:headers {"Authorization" (str "Bearer " (or token env-slack-token))
                        "Content-Type" "application/json; charset=utf-8"}
              :body (json/generate-string
-                    (merge {:channel (or channel-id env-channel-id)} body))}
+                    (merge {:channel (or channel-id env-channel-id)
+                            :thread_ts thread-ts
+                            :reply_broadcast (or reply-broadcast false)}
+                           body))}
         res (curl/post (slack-api "chat.postMessage") req)]
     (println req)
     (pprint (update res :body json/parse-string))))
 
-(defn text-chat! [token channel-id text]
+(defn text-chat! [opts text]
   (println "sending text: " text)
-  (chat-postMessage! token channel-id {:text text}))
+  (chat-postMessage! opts {:text text}))
 
 (defn template-chat!
-  ([token channel-id template]
-   (template-chat! token channel-id template {}))
-  ([token channel-id template context]
+  ([opts template]
+   (template-chat! opts template {}))
+  ([opts template context]
    (let [template-str (slurp template)
          chat-to-send (render template-str context)]
      (println "sending template from" template)
      (println "with context data: " context)
-     (chat-postMessage! token channel-id {:blocks (-> (json/parse-string chat-to-send) (get "blocks"))}))))
+     (chat-postMessage! opts {:blocks (-> (json/parse-string chat-to-send) (get "blocks"))}))))

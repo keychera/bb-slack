@@ -1,6 +1,7 @@
 # bb-slack
 
-send slack message with babashka
+send slack message with babashka, wrapper of this endpoint
+https://api.slack.com/methods/chat.postMessage
 
 need babashka, quick install:
 ```
@@ -8,10 +9,13 @@ bash < <(curl -s https://raw.githubusercontent.com/babashka/babashka/master/inst
 
 ```
 ## quick run
-you can run this without cloning the repo manually
+you can run the jar immediately using babashka
 
+download the [jar](https://github.com/keychera/bb-slack/releases/tag/latest)
+
+then run
 ```sh
-bb -Sdeps '{:deps {io.github.keychera/bb-slack {:git/tag "v0.1.1-alpha" :git/sha "22c07f4"}}}' -m main \
+bb slack.jar
 :slack/text "hello slack from commandline babashka quick run" \
 :slack/token "<token-here>" \
 :slack/channel-id "<channel-id-here>"
@@ -43,6 +47,12 @@ bb -m main --slack/template test/block.json --slack/context-edn test/context.edn
 
 # with template and context-str
 bb -m main --slack/template test/block.json --slack/context-str '{:title "This is from commandline" :from "someone"}'
+
+# with thread-ts
+bb -m main --slack/text "hello slack thread replies from babashka" --slack/thread-ts 1690280713.589219
+
+# with reply-broadcast
+bb -m main --slack/text "hello broadcasted thread replies from babashka" --slack/thread-ts 1690280713.589219 --slack/reply-broadcast
 ```
 
 

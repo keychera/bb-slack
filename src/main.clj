@@ -4,6 +4,8 @@
             [util :refer [exit read-edn]]
             [clojure.edn :as edn]))
 
+(defmacro syms->map [& syms] (zipmap (map keyword syms) syms))
+
 ;; send to slack!
 (defn -main
   "available flags
@@ -15,10 +17,15 @@
 
    --slack/template
    --slack/context-edn
-   --slack/context-str"
+   --slack/context-str
+   
+   --slack/thread-ts
+   --slack/reply-broadcast"
   [& args]
-  (let [{:as opts :keys [help]
-         :slack/keys [token channel-id text template context-edn context-str]} (cli/parse-opts args)]
+  (let [{:as _opts :keys [help]
+         :slack/keys [token channel-id thread-ts reply-broadcast
+                      text template context-edn context-str]} (cli/parse-opts args {:coerce {:slack/thread-ts :string}})
+        opts (syms->map token channel-id thread-ts reply-broadcast)]
     (println "[bb-slack] flags:" opts)
     (cond help
           (println (:doc (meta #'-main)))
@@ -32,14 +39,14 @@
 
                 (some? context-edn)
                 (let [context (read-edn context-edn)]
-                  (slack/template-chat! token channel-id template context))
+                  (slack/template-chat! opts template context))
 
                 (some? context-str)
                 (let [context (edn/read-string context-str)]
-                  (slack/template-chat! token channel-id template context)))
+                  (slack/template-chat! opts template context)))
 
           (some? text)
-          (slack/text-chat! token channel-id text)
+          (slack/text-chat! opts text)
 
           :else (exit #:error{:message "please provide the proper flags"
                               :help "use --help for more information"}))
