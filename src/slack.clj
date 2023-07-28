@@ -21,7 +21,6 @@
                             :reply_broadcast (or reply-broadcast false)}
                            body))}
         res (curl/post (slack-api "chat.postMessage") req)]
-    (println req)
     (pprint (update res :body json/parse-string))))
 
 (defn text-chat! [opts text]
