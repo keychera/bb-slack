@@ -31,7 +31,7 @@
           (println (:doc (meta #'-main)))
 
           (and (some? template) (nil? context-edn) (nil? context-str))
-          (slack/template-chat! token channel-id template)
+          (slack/template-chat! opts template)
 
           (or (some? context-edn) (some? context-str))
           (cond (nil? template)
